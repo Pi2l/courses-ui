@@ -1,0 +1,13 @@
+
+<div class="p-4" *ngIf="user">
+  <div class="container">
+      <h1>First name: {{user.firstName}}</h1>
+      <div>Last name: {{user.lastName}}</div>
+      <div>Phone number: {{user.phoneNumber}}</div>
+      <div>Login: {{user.login}}</div>
+      <div>Role: {{user.role}}</div>
+      <div>Group id: {{user.group}}</div>
+      
+      <p><a routerLink="/logout" (click)="logout()">Logout</a></p>
+  </div>
+</div>

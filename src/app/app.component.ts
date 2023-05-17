@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { User } from './model/User';
+import { UserService } from './service/user.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'courses-ui';
+  user?: User | null
+
+  constructor( private userService: UserService) {
+    userService.user.subscribe( user => this.user = user );
+  }
+
+  logout() {
+    this.userService.logout();
+  }
 }
