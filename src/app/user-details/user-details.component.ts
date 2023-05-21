@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../model/User';
-import { UserService } from '../service/user.service';
+import { UserAuthService } from '../service/user-auth.service';
 
 @Component({
   selector: 'app-user-details',
@@ -14,9 +14,9 @@ export class UserDetailsComponent {
 
   constructor(
     private router: Router, 
-    private userService: UserService
+    private userService: UserAuthService
   ) { 
-    this.user = this.userService.userValue;
+    // this.user = this.userService.getUser;
   }
 
   logout() {

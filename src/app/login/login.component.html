@@ -1,11 +1,17 @@
-<div>
+<form [formGroup]="loginForm" (submit)="onSubmit()">
   <div>
     <label for="user-login">Login:</label>
-    <input id="user-login" [(ngModel)]="user.login" placeholder="login" />
+    <input id="user-login" formControlName="login" placeholder="login" />
+    <!-- <div *ngIf="formControls.login.errors" class="invalid-feedback">
+      <div *ngIf="f.username.errors.required">Username is required</div>
+    </div> -->
   </div>
 
   <div>
     <label for="user-password">Password:</label>
-    <input id="user-password" type="password" [(ngModel)]="user.password" placeholder="password" />
+    <input id="user-password" type="password" formControlName="password" placeholder="password" />
   </div>
-</div>
+
+  <button type="submit" > Login </button>
+  <!-- [disabled]="loginForm.valid" -->
+</form>

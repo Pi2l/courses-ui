@@ -1,3 +1,3 @@
 export class environment {
-  public static apiUrl: string = 'http://localhost:8080/api/v1/';
+  public static BASE_URL: string = 'http://localhost:8080/api';
 }
