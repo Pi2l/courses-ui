@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserAuthService } from '../service/user-auth.service';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

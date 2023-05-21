@@ -1,17 +1,27 @@
-<form [formGroup]="loginForm" (submit)="onSubmit()">
-  <div>
-    <label for="user-login">Login:</label>
-    <input id="user-login" formControlName="login" placeholder="login" />
-    <!-- <div *ngIf="formControls.login.errors" class="invalid-feedback">
-      <div *ngIf="f.username.errors.required">Username is required</div>
-    </div> -->
-  </div>
+<div class="form-container">
+  <h1>Login</h1>
+  <form class="" [formGroup]="loginForm" (submit)="onSubmit()">
+    
+    <div>
+      <mat-form-field>
+        <mat-label>Login:</mat-label>
+        <input matInput placeholder="login" formControlName="login" />
 
-  <div>
-    <label for="user-password">Password:</label>
-    <input id="user-password" type="password" formControlName="password" placeholder="password" />
-  </div>
+        <mat-error *ngIf="formControls['login'].hasError('required')">
+          Login is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <button type="submit" > Login </button>
-  <!-- [disabled]="loginForm.valid" -->
-</form>
+    <div>
+      <mat-form-field>
+        <mat-label>Password:</mat-label>
+        <input type="password" matInput placeholder="password" formControlName="password" />
+      </mat-form-field>
+    </div>
+
+    <div>
+      <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid" > Login </button>
+    </div>
+  </form>
+</div>
