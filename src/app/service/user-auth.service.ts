@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, throwError } from 'rxjs';
 import { environment } from '../environment';
 import { UserToken } from '../model/UserToken';
 
@@ -27,14 +27,11 @@ export class UserAuthService {
   public login(login: string, password: string) {
     return this.http
       .post<UserToken>(`${environment.BASE_URL}/login`, { login, password })
-      .subscribe({
-        next: (user) => {
-          localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
-          this.userSubject.next( user );
-          this.router.navigate(['']);
-        },
-        error: (e) => this.handleError(e),
-      });
+      .pipe( map( user => {
+        localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
+        this.userSubject.next( user );
+        return user;
+      } ));
   }
 
   public logout() {
