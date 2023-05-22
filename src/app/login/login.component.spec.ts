@@ -1,4 +1,12 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MaterialModule } from '../mat-module.module';
 
 import LoginComponent from './login.component';
 
@@ -8,7 +16,17 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent]
+      imports: [HttpClientModule, 
+        MaterialModule,
+        BrowserModule,
+        MatButtonModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        RouterTestingModule,
+      ],
+      declarations: [ LoginComponent ],
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
