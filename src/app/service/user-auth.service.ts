@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, tap, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../environment';
 import { UserToken } from '../model/UserToken';
 
@@ -50,7 +50,7 @@ export class UserAuthService {
   }
 
   public getUserDetails() {
-    return this.http.post(`${environment.BASE_URL}/v1/users/1`, null);
+    return this.http.get(`${environment.BASE_URL}/v1/users/1`);
   }
 
   public updateUser(user: UserToken, login: string) {
@@ -59,21 +59,9 @@ export class UserAuthService {
   }
 
   public refreshToken() {
-    const params = new HttpParams().set( "refreshToken", this.getUser?.refreshToken!! );
-    // const newRequest = new HttpRequest('POST', `${environment.BASE_URL}/refresh`, null, { params: params });
-    console.log("refreshToken pipe")
-    return this.http.post<any>(`${environment.BASE_URL}/refresh`, { params: params }).pipe(
-      tap({
-        next: (event) => {
-          console.log("refreshToken success")
-          event = event as HttpResponse<any>;
-          const userToken = event.body as UserToken;
-          this.updateUser(userToken, this.getUser?.login!!);
-        },
-        error: (e) => {
-          console.log("refreshToken error")
-        },
-        complete: () => { console.log('finalize'); }
+    return this.http.post(`${environment.BASE_URL}/refresh?refreshToken=${this.getUser?.refreshToken!!}`, {}).pipe(
+      tap( (res: any) => {
+        this.updateUser(res, this.getUser?.login!!);
       })
     );
   }
