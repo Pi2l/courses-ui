@@ -53,13 +53,23 @@ export class UserAuthService {
     return this.http.get(`${environment.BASE_URL}/v1/users/1`);
   }
 
-  public updateUser(user: UserToken, login: string) {
-    localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
+  public updateUser(user: UserToken | null, login: string) {
+    if (user !== null) {
+      localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
+    } else {
+      localStorage.removeItem( 'userToken' );
+    }
     this.userSubject.next( user );
   }
 
   public refreshToken() {
-    return this.http.post(`${environment.BASE_URL}/refresh?refreshToken=${this.getUser?.refreshToken!!}`, {}).pipe(
+    return this.http.post(`${environment.BASE_URL}/refresh`, {}, 
+      { 
+        params: {
+          refreshToken: this.getUser?.refreshToken!!
+        } 
+      })
+      .pipe(
       tap( (res: any) => {
         this.updateUser(res, this.getUser?.login!!);
       })
