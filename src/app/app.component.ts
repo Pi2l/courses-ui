@@ -18,4 +18,15 @@ export class AppComponent {
   logout() {
     this.userService.logout();
   }
+
+  getUser() {
+    this.userService.getUserDetails()
+    .subscribe({
+      next: (user) => {
+        console.log(user);
+      },
+      error: (e) => { console.log("failed to get user",e) }
+    });
+  }
+  
 }

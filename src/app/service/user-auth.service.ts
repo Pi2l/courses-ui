@@ -1,7 +1,7 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap, throwError } from 'rxjs';
 import { environment } from '../environment';
 import { UserToken } from '../model/UserToken';
 
@@ -28,22 +28,16 @@ export class UserAuthService {
     return this.http
       .post<UserToken>(`${environment.BASE_URL}/login`, { login, password })
       .pipe( map( user => {
-        localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
-        this.userSubject.next( user );
+        this.updateUser(user, login);
         return user;
       } ));
   }
 
   public logout() {
-    const headers = new HttpHeaders({ 'Authorization': `Bearer ${this.getUser?.accessToken}` });
     const params = new HttpParams().set( "refreshToken", this.getUser?.refreshToken!! );
     
     this.http
-      .post(`${environment.BASE_URL}/logout`, null,
-      {
-        params: params, 
-        headers: headers, 
-      })
+      .post(`${environment.BASE_URL}/logout`, null, { params: params })
       .subscribe({
         next: () => {
           localStorage.removeItem('userToken');
@@ -53,6 +47,35 @@ export class UserAuthService {
         },
         error: (e) => this.handleError(e),
       });
+  }
+
+  public getUserDetails() {
+    return this.http.post(`${environment.BASE_URL}/v1/users/1`, null);
+  }
+
+  public updateUser(user: UserToken, login: string) {
+    localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
+    this.userSubject.next( user );
+  }
+
+  public refreshToken() {
+    const params = new HttpParams().set( "refreshToken", this.getUser?.refreshToken!! );
+    // const newRequest = new HttpRequest('POST', `${environment.BASE_URL}/refresh`, null, { params: params });
+    console.log("refreshToken pipe")
+    return this.http.post<any>(`${environment.BASE_URL}/refresh`, { params: params }).pipe(
+      tap({
+        next: (event) => {
+          console.log("refreshToken success")
+          event = event as HttpResponse<any>;
+          const userToken = event.body as UserToken;
+          this.updateUser(userToken, this.getUser?.login!!);
+        },
+        error: (e) => {
+          console.log("refreshToken error")
+        },
+        complete: () => { console.log('finalize'); }
+      })
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
