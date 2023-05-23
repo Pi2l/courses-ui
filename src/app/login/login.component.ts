@@ -25,19 +25,27 @@ export default class LoginComponent implements OnInit {
       login: ['', Validators.required],
       password: ['', Validators.required],
     });
+
+    this.loginForm.valueChanges.subscribe(() => {
+      this.loginForm.controls['login'].setErrors(null);
+      this.loginForm.controls['password'].setErrors(null);
+    });
   }
   
   get formControls() { return this.loginForm.controls; }
 
   onSubmit() {
-    console.log(this.loginForm.value);
     this.userAuthService
       .login( this.loginForm.value.login, this.loginForm.value.password )
       .subscribe({
         next: () => {
           const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
           this.router.navigateByUrl(returnUrl);
-        }
+        },
+        error: () => {
+          this.loginForm.controls['login'].setErrors({ 'incorrect': true, invalidLoginOrPassword: true });
+          this.loginForm.controls['password'].setErrors({ 'incorrect': true });
+        },
       });
   }
 }
