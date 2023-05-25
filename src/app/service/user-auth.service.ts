@@ -40,13 +40,20 @@ export class UserAuthService {
       .post(`${environment.BASE_URL}/logout`, null, { params: params })
       .subscribe({
         next: () => {
-          localStorage.removeItem('userToken');
-          this.userSubject.next(null);
-          this.router.navigate(['/login']);
-          console.log('Logout successful');
+          this.logoutUser();
         },
-        error: (e) => this.handleError(e),
-      });
+        error: (e) => {
+          this.handleError(e);
+          this.logoutUser();
+        },
+    });
+  }
+
+  private logoutUser() {
+    localStorage.removeItem('userToken');
+    this.userSubject.next(null);
+    this.router.navigate(['/login']);
+    console.log('Logout successful');
   }
 
   public updateUser(user: UserToken | null, login: string) {
