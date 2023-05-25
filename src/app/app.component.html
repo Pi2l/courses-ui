@@ -1,6 +1,10 @@
 <nav *ngIf="user">
   <div class="navbar-nav">
-    <button class="btn btn-link nav-item nav-link" (click)="logout()">Logout</button>
+    <button mat-raised-button color="primary" (click)="logout()">Logout</button>
+  </div>
+
+  <div class="navbar-nav">
+    <button mat-raised-button color="secondary" (click)="getUser()">getUser</button>
   </div>
 </nav>
 

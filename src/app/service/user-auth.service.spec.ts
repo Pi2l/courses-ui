@@ -24,6 +24,10 @@ describe('UserService', () => {
     service = TestBed.inject(UserAuthService);
   });
 
+  afterEach(() => {
+    localStorage.removeItem( 'userToken' );
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
