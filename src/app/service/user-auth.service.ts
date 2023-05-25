@@ -49,13 +49,10 @@ export class UserAuthService {
       });
   }
 
-  public getUserDetails() {
-    return this.http.get(`${environment.BASE_URL}/v1/users/1`);
-  }
-
   public updateUser(user: UserToken | null, login: string) {
     if (user !== null) {
-      localStorage.setItem( 'userToken', JSON.stringify({ ...user, login: login }) );
+      user.login = login;
+      localStorage.setItem( 'userToken', JSON.stringify( user ) );
     } else {
       localStorage.removeItem( 'userToken' );
     }
