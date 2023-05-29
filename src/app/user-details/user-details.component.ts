@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../model/User';
 import { UserAuthService } from '../service/user-auth.service';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-user-details',
@@ -13,14 +14,16 @@ export class UserDetailsComponent {
   user?: User | null;
 
   constructor(
-    private router: Router, 
-    private userService: UserAuthService
-  ) { 
-    // this.user = this.userService.getUser;
-  }
-
-  logout() {
-    this.userService.logout();
-    this.router.navigateByUrl('/login');
+    private userService: UserService,
+    private authService: UserAuthService
+  ) {
+    this.authService.user.subscribe( user => {
+      if (user !== null) {
+        this.userService.getUserDetailsByLogin( user?.login ).subscribe({
+          next: user => this.user = user.items[0],
+          error: () => this.authService.logout()
+        });
+      }
+    });
   }
 }

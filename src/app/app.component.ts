@@ -20,18 +20,4 @@ export class AppComponent {
     this.userService.logout();
   }
 
-  getUser() {
-    this.userService.getUserDetails()
-    .subscribe({
-      next: (user) => {
-        console.log(user);
-      },
-      error: (e) => { 
-        console.log("failed to get user",e);
-        this.userService.updateUser( null, '' );
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-  
 }
