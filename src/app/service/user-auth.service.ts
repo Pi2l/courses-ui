@@ -24,7 +24,7 @@ export class UserAuthService {
     return this.userSubject.value;
   }
 
-  public login(login: string, password: string) {
+  public login(login: string, password: string): Observable<UserToken> {
     return this.http
       .post<UserToken>(`${environment.BASE_URL}/login`, { login, password })
       .pipe( map( user => {
