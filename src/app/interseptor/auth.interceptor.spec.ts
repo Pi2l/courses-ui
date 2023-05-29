@@ -32,6 +32,7 @@ describe('AuthInterceptor', () => {
 
   afterEach(() => {
     httpTestingController.verify();
+    localStorage.removeItem( 'userToken' );
   });
 
   it('should be created', () => {
